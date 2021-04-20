@@ -7,5 +7,10 @@ namespace JsonUtil
     public class Group
     {
         public List<Geo> geos { set; get; }
+
+        public Group()
+        {
+            geos = new List<Geo>();
+        }
     }
 }

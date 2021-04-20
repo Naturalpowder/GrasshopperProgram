@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketUtil", "SocketUtil\So
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonUtil", "JsonUtil\JsonUtil.csproj", "{5B9F5E51-131B-46AD-A48D-75DDFEFAA45E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization", "Serialization\Serialization.csproj", "{2BB268D3-4831-4EF1-8B9B-C6D6F856E242}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5B9F5E51-131B-46AD-A48D-75DDFEFAA45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B9F5E51-131B-46AD-A48D-75DDFEFAA45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B9F5E51-131B-46AD-A48D-75DDFEFAA45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB268D3-4831-4EF1-8B9B-C6D6F856E242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB268D3-4831-4EF1-8B9B-C6D6F856E242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB268D3-4831-4EF1-8B9B-C6D6F856E242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB268D3-4831-4EF1-8B9B-C6D6F856E242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

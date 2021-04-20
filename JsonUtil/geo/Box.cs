@@ -6,12 +6,20 @@ using Rhino.Geometry;
 
 namespace JsonUtil
 {
-   public class Box : Geo
+    public class Box : Geo
     {
         public Point x { get; set; }
         public Point y { get; set; }
         public Point z { get; set; }
         public Point origin { get; set; }
+
+        public Box(Rhino.Geometry.Box box)
+        {
+            x = new Point(box.X.Max - box.X.Min, 0, 0);
+            y = new Point(0, box.Y.Max - box.Y.Min, 0);
+            z = new Point(0, 0, box.Z.Max - box.Z.Min);
+            origin = new Point(box.X.Min, box.Y.Min, box.Z.Min);
+        }
 
         public Rhino.Geometry.Box ToRhinoBox()
         {

@@ -57,6 +57,7 @@
     <Compile Include="geo\Circle.cs" />
     <Compile Include="geo\Geo.cs" />
     <Compile Include="tools\GeoJsonConverter.cs" />
+    <Compile Include="tools\ToJson.cs" />
     <Compile Include="tools\Z_GHGroup.cs" />
     <Compile Include="tools\GHHelper.cs" />
     <Compile Include="tools\Group.cs" />

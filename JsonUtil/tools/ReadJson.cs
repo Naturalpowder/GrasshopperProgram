@@ -44,7 +44,7 @@ namespace JsonUtil
                     }
                     else if (geo is Surface mySurface)
                     {
-                        Brep surface = mySurface.toRhinoSurface();
+                        Brep surface = mySurface.ToRhinoSurface();
                         gHGroup.Data.Add(new GH_Surface(surface));
                     }
                     else if (geo is Prism prism)
@@ -54,7 +54,7 @@ namespace JsonUtil
                     }
                     else if (geo is Mesh myMesh)
                     {
-                        Rhino.Geometry.Mesh mesh = myMesh.toRhinoMesh();
+                        Rhino.Geometry.Mesh mesh = myMesh.ToRhinoMesh();
                         gHGroup.Data.Add(new GH_Mesh(mesh));
                     }
                 }

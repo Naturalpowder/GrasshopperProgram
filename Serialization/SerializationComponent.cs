@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using JsonUtil;
 using Grasshopper.Kernel.Types;
+using System.Linq;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded

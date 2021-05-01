@@ -2,6 +2,7 @@
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace SocketUtil
 {
@@ -21,9 +22,26 @@ namespace SocketUtil
 
         public string ReceiveMessage()
         {
-            byte[] recvBytes = new byte[1024];
-            int bytes = temp.Receive(recvBytes, recvBytes.Length, 0);//从客户端接受信息
-            return Encoding.UTF8.GetString(recvBytes, 0, bytes);
+            byte[] bytes = ReceiveAll(temp);
+            return Encoding.UTF8.GetString(bytes);
+        }
+
+        public byte[] ReceiveAll(Socket socket)
+        {
+            var buffer = new List<byte>();
+
+            while (socket.Available > 0)
+            {
+                var currByte = new Byte[1];
+                var byteCounter = socket.Receive(currByte, currByte.Length, SocketFlags.None);
+
+                if (byteCounter.Equals(1))
+                {
+                    buffer.Add(currByte[0]);
+                }
+            }
+
+            return buffer.ToArray();
         }
 
         public void SendMessage(string sendStr)
@@ -42,7 +60,11 @@ namespace SocketUtil
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);//创建一个socket对像，如果用udp协议，则要用SocketType.Dgram类型的套接字
             server.Bind(ipe);//绑定EndPoint对像（2000端口和ip地址）
             server.Listen(0);//开始监听
+            server.ReceiveTimeout = 10000;
+            server.SendTimeout = 10000;
             temp = server.Accept();//为新建连接创建新的socket
+            temp.ReceiveTimeout = 10000;
+            server.SendTimeout = 10000;
             Console.WriteLine("建立连接");
         }
 

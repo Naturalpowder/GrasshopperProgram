@@ -12,7 +12,7 @@ namespace geometry.breps
         public List<Point> baseSurface { set; get; }
 
 
-        public Surface(Rhino.Geometry.Brep surface)
+        public Surface(Brep surface)
         {
             baseSurface = new List<Point>(surface.Vertices.ToList().Select(e => new Point(e.Location.X, e.Location.Y, e.Location.Z)));
             initial();

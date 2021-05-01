@@ -3,10 +3,7 @@ using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel.Parameters;
-using Grasshopper;
-using Rhino.Geometry;
 using System;
-using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using JsonUtil;
@@ -33,9 +30,9 @@ namespace Template
         /// new tabs/panels will automatically be created.
         /// </summary>
         public TemplateComponent()
-          : base("SolverTemplate", "Solver",
-              "A Template for running C# scripts",
-              "CSharpProject", "Template")
+          : base("SocketSolver", "Solver",
+              "A Socket Template for running C# scripts with JAVA",
+              "GrasshopperProgram", "Socket")
         {
         }
 
@@ -73,8 +70,8 @@ namespace Template
             if (toggle && iter < maxRefresh)
             {
                 iter++;
-                ExpireSolution(true);
                 Draw(DA);
+                ExpireSolution(true);
             }
             else if (!toggle)
             {
@@ -101,7 +98,8 @@ namespace Template
             Server server = null;
             try
             {
-                server = Manage(DA, server);
+                GetServer(DA, ref server);
+                Manage(DA, server);
             }
             catch (Exception e)
             {
@@ -110,27 +108,32 @@ namespace Template
             finally
             {
                 if (server != null)
+                {
                     server.Close();
+                    server = null;
+                }
             }
         }
 
-        private Server Manage(IGH_DataAccess DA, Server server)
+        private void Manage(IGH_DataAccess DA, Server server)
         {
-            GH_Document doc = OnPingDocument();
-            ReceiveMessage(DA, ref server);
-            Param_Brep brep = Calculate(doc, DA);
-            String info = null;
-            String typeReturn = "";
-            DA.GetData(3, ref typeReturn);
-            if (typeReturn.Equals("number"))
-                info = SetNumberResult(DA, doc);
-            else if (typeReturn.Equals("text"))
-                info = SetTextResult(DA, doc);
-            SendMessage(info, server);
-            return server;
+            if (!stop)
+            {
+                GH_Document doc = OnPingDocument();
+                ReceiveMessage(DA, server);
+                Param_Brep brep = Calculate(doc);
+                String info = null;
+                String typeReturn = "";
+                DA.GetData(3, ref typeReturn);
+                if (typeReturn.Equals("number"))
+                    info = SetNumberResult(doc);
+                else if (typeReturn.Equals("text"))
+                    info = SetTextResult(doc);
+                SendMessage(info, server);
+            }
         }
 
-        private Param_Brep Calculate(GH_Document doc, IGH_DataAccess DA)
+        private Param_Brep Calculate(GH_Document doc)
         {
             Param_Brep brep = (Param_Brep)GetObject(doc, "GeoFromJson");
             brep.ClearData();
@@ -139,30 +142,33 @@ namespace Template
             return brep;
         }
 
-        private void ReceiveMessage(IGH_DataAccess DA, ref Server server)
+        private void ReceiveMessage(IGH_DataAccess DA, Server server)
         {
-            if (!stop)
+            string json = server.ReceiveMessage();
+            //DA.SetData(0, json);
+            if (json.Equals("stop"))
             {
-                String host = "";
-                int port = 0;
-                DA.GetData(1, ref port);
-                DA.GetData(2, ref host);
-                server = new Server(host, port);
-                string json = server.ReceiveMessage();
-                if (json.Equals("stop"))
-                {
-                    stop = true;
-                    tree = new GH_Structure<IGH_Goo>();
-                }
-                else
-                {
-                    GH_Structure<IGH_Goo> tree = ReadJson.Get(json);
-                    DA.SetDataTree(1, tree);
-                }
+                stop = true;
+                tree = new GH_Structure<IGH_Goo>();
+                iter = maxRefresh;
+            }
+            else
+            {
+                tree = ReadJson.Get(json);
+                DA.SetDataTree(1, tree);
             }
         }
 
-        private String SetTextResult(IGH_DataAccess DA, GH_Document doc)
+        private void GetServer(IGH_DataAccess DA, ref Server server)
+        {
+            String host = "";
+            int port = 0;
+            DA.GetData(1, ref port);
+            DA.GetData(2, ref host);
+            server = new Server(host, port);
+        }
+
+        private String SetTextResult(GH_Document doc)
         {
             GH_Panel panel = (GH_Panel)GetObject(doc, "Result");
             panel.CollectData();
@@ -175,7 +181,7 @@ namespace Template
             return info;
         }
 
-        private String SetNumberResult(IGH_DataAccess DA, GH_Document doc)
+        private String SetNumberResult(GH_Document doc)
         {
             Param_Number result = (Param_Number)GetObject(doc, "Result");
             result.CollectData();

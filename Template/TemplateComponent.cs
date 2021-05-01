@@ -24,7 +24,7 @@ namespace Template
         private int iter = 0;
         private int maxRefresh = 100;
         private Boolean stop = false;
-        private List<Z_GHGroup> geometries;
+        private GH_Structure<IGH_Goo> tree;
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
         /// constructor without any arguments.
@@ -134,7 +134,7 @@ namespace Template
         {
             Param_Brep brep = (Param_Brep)GetObject(doc, "GeoFromJson");
             brep.ClearData();
-            brep.AddVolatileDataTree(ToGHStructure());
+            brep.AddVolatileDataTree(tree);
             brep.ExpireSolution(true);
             return brep;
         }
@@ -152,32 +152,14 @@ namespace Template
                 if (json.Equals("stop"))
                 {
                     stop = true;
-                    geometries = null;
+                    tree = new GH_Structure<IGH_Goo>();
                 }
                 else
                 {
-                    geometries = ReadJson.Get(json);
-                    GH_Structure<IGH_Goo> tree = ToGHStructure();
+                    GH_Structure<IGH_Goo> tree = ReadJson.Get(json);
                     DA.SetDataTree(1, tree);
                 }
             }
-        }
-
-        private GH_Structure<IGH_Goo> ToGHStructure()
-        {
-            GH_Structure<IGH_Goo> structure = new GH_Structure<IGH_Goo>();
-            if (geometries != null)
-            {
-                for (int i = 0; i < geometries.Count; i++)
-                {
-                    GH_Path path = new GH_Path(i);
-                    foreach (IGH_Goo item in geometries[i].Data)
-                    {
-                        structure.Append(item, path);
-                    }
-                }
-            }
-            return structure;
         }
 
         private String SetTextResult(IGH_DataAccess DA, GH_Document doc)

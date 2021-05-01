@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using Rhino.Geometry;
 
-namespace JsonUtil
+namespace geometry.vectors
 {
     public class Vector : Geo
     {
         public Point origin { set; get; }
         public Point vector { set; get; }
 
-        public Vector(Vector3d vector)
+        public Vector(Point3d vector)
         {
             origin = new Point(0, 0, 0);
             this.vector = new Point(vector.X, vector.Y, vector.Z);
+            initial();
         }
 
         public Vector3d ToRhinoVector()

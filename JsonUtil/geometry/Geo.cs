@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using Rhino.Geometry;
 
-namespace JsonUtil
+namespace geometry
 {
     public abstract class Geo
     {
         public String color { set; get; }
         public String type { set; get; }
-        public String userID { set; get; }
+        public Info info { set; get; }
+
+        public void initial()
+        {
+            color = "#ffffff";
+            type = GetType().ToString();
+            info = new Info();
+        }
     }
 }

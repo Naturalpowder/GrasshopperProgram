@@ -4,7 +4,7 @@ using System.Text;
 using Rhino.Geometry;
 using System.Linq;
 
-namespace JsonUtil
+namespace geometry.breps
 {
     public class Mesh : Geo
     {
@@ -27,6 +27,7 @@ namespace JsonUtil
                     faces.Add(new int[] { face.A, face.B, face.C, face.D });
                 }
             }
+            initial();
         }
 
         public Rhino.Geometry.Mesh ToRhinoMesh()

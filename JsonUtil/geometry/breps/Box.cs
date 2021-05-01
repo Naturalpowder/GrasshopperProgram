@@ -4,7 +4,7 @@ using System.Text;
 using Rhino.Geometry;
 
 
-namespace JsonUtil
+namespace geometry.breps
 {
     public class Box : Geo
     {
@@ -19,6 +19,7 @@ namespace JsonUtil
             y = new Point(0, box.Y.Max - box.Y.Min, 0);
             z = new Point(0, 0, box.Z.Max - box.Z.Min);
             origin = new Point(box.X.Min, box.Y.Min, box.Z.Min);
+            initial();
         }
 
         public Rhino.Geometry.Box ToRhinoBox()

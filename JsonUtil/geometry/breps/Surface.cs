@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Rhino.Geometry;
 using System.Linq;
+using JsonUtil;
 
-namespace JsonUtil
+namespace geometry.breps
 {
     public class Surface : Geo
     {
@@ -14,6 +15,7 @@ namespace JsonUtil
         public Surface(Rhino.Geometry.Brep surface)
         {
             baseSurface = new List<Point>(surface.Vertices.ToList().Select(e => new Point(e.Location.X, e.Location.Y, e.Location.Z)));
+            initial();
         }
 
         public Brep ToRhinoSurface()

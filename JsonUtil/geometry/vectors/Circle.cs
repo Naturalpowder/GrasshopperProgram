@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Rhino.Geometry;
+﻿using Rhino.Geometry;
 
-namespace JsonUtil
+namespace geometry.vectors
 {
     public class Circle : Geo
     {
@@ -14,6 +11,7 @@ namespace JsonUtil
         {
             this.radius = circle.Radius;
             this.origin = new Point(circle.Center.X, circle.Center.Y, circle.Center.Z);
+            initial();
         }
 
         public Rhino.Geometry.Circle ToRhinoCircle()

@@ -53,22 +53,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="geo\Box.cs" />
-    <Compile Include="geo\Circle.cs" />
-    <Compile Include="geo\Geo.cs" />
+    <Compile Include="geometry\breps\Box.cs" />
+    <Compile Include="geometry\breps\PolySurface.cs" />
+    <Compile Include="geometry\vectors\Circle.cs" />
+    <Compile Include="geometry\Geo.cs" />
+    <Compile Include="geometry\Info.cs" />
     <Compile Include="tools\GeoJsonConverter.cs" />
     <Compile Include="tools\ToJson.cs" />
     <Compile Include="tools\Z_GHGroup.cs" />
     <Compile Include="tools\GHHelper.cs" />
     <Compile Include="tools\Group.cs" />
-    <Compile Include="geo\Mesh.cs" />
-    <Compile Include="geo\Point.cs" />
-    <Compile Include="geo\Prism.cs" />
+    <Compile Include="geometry\breps\Mesh.cs" />
+    <Compile Include="geometry\Point.cs" />
+    <Compile Include="geometry\breps\Prism.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tools\ReadJson.cs" />
-    <Compile Include="geo\Surface.cs" />
+    <Compile Include="geometry\breps\Surface.cs" />
     <Compile Include="tools\Util.cs" />
-    <Compile Include="geo\Vector.cs" />
+    <Compile Include="geometry\vectors\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Box.json" />

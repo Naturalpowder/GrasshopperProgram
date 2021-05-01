@@ -4,6 +4,11 @@ using Newtonsoft.Json;
 using Rhino.Geometry;
 using System.Collections.Generic;
 using Grasshopper.Kernel.Types;
+using geometry;
+using geometry.vectors;
+using geometry.breps;
+using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
 
 namespace JsonUtil
 {
@@ -11,59 +16,57 @@ namespace JsonUtil
     {
         String filePath { get; set; }
 
-
         public ReadJson(String filePath)
         {
             this.filePath = filePath;
         }
 
-        public static List<Z_GHGroup> Get(string json)
+        public static GH_Structure<IGH_Goo> Get(string json)
         {
-            List<Z_GHGroup> list = new List<Z_GHGroup>();
+            GH_Structure<IGH_Goo> structure = new GH_Structure<IGH_Goo>();
             GHHelper results = JsonConvert.DeserializeObject<GHHelper>(json, new GeoJsonConverter<Geo>());
-            foreach (Group group in results.groups)
+            for (int i = 0; i < results.groups.Count; i++)
             {
-                Z_GHGroup gHGroup = new Z_GHGroup();
-                foreach (Geo geo in group.geos)
+                GH_Path path = new GH_Path(i);
+                foreach (Geo geo in results.groups[i].geos)
                 {
-                    if (geo is Box myBox)
+                    if (geo is geometry.breps.Box myBox)
                     {
 
                         Rhino.Geometry.Box box = myBox.ToRhinoBox();
-                        gHGroup.Data.Add(new GH_Box(box));
+                        structure.Append(new GH_Box(box), path);
                     }
                     else if (geo is Vector myVector)
                     {
                         Vector3d vector = myVector.ToRhinoVector();
-                        gHGroup.Data.Add(new GH_Vector(vector));
+                        structure.Append(new GH_Vector(vector), path);
                     }
-                    else if (geo is Circle myCircle)
+                    else if (geo is geometry.vectors.Circle myCircle)
                     {
                         Rhino.Geometry.Circle circle = myCircle.ToRhinoCircle();
-                        gHGroup.Data.Add(new GH_Circle(circle));
+                        structure.Append(new GH_Circle(circle), path);
                     }
-                    else if (geo is Surface mySurface)
+                    else if (geo is geometry.breps.Surface mySurface)
                     {
                         Brep surface = mySurface.ToRhinoSurface();
-                        gHGroup.Data.Add(new GH_Surface(surface));
+                        structure.Append(new GH_Surface(surface), path);
                     }
                     else if (geo is Prism prism)
                     {
                         Extrusion extrusion = prism.ToRhinoPrism();
-                        gHGroup.Data.Add(new GH_Brep(extrusion.ToBrep()));
+                        structure.Append(new GH_Brep(extrusion.ToBrep()), path);
                     }
-                    else if (geo is Mesh myMesh)
+                    else if (geo is geometry.breps.Mesh myMesh)
                     {
                         Rhino.Geometry.Mesh mesh = myMesh.ToRhinoMesh();
-                        gHGroup.Data.Add(new GH_Mesh(mesh));
+                        structure.Append(new GH_Mesh(mesh), path);
                     }
                 }
-                list.Add(gHGroup);
             }
-            return list;
+            return structure;
         }
 
-        public List<Z_GHGroup> Get()
+        public GH_Structure<IGH_Goo> Get()
         {
             var json = File.ReadAllText(filePath);
             return Get(json);

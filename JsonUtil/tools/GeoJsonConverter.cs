@@ -18,8 +18,8 @@ namespace JsonUtil
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject jObject = JObject.Load(reader);
-            String[] types = jObject["type"].Value<string>().Split('.');
-            Type type = Type.GetType(MethodBase.GetCurrentMethod().DeclaringType.Namespace + "." + types[types.Length - 1]);
+            String typeName = jObject["type"].Value<string>();
+            Type type = Type.GetType(typeName);
             return JsonConvert.DeserializeObject(jObject.ToString(), type);
         }
 

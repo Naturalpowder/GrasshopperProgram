@@ -1,21 +1,16 @@
 ﻿using Grasshopper.Kernel;
-using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
-using JsonUtil;
-using Grasshopper.Kernel.Types;
-using System.Linq;
 using System.IO;
-using Grasshopper.Kernel.Data;
+using JsonUtil;
 
-// In order to load the result of this wizard, you will also need to
+// In order to load the result of this wizard, you will also need togras
 // add the output bin/ folder of this project to the list of loaded
 // folder in Grasshopper.
 // You can use the _GrasshopperDeveloperSettings Rhino command for that.
 
-namespace Serialization
+namespace Deserialization
 {
-    public class SerializationComponent : GH_Component
+    public class DeserializationComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -24,9 +19,9 @@ namespace Serialization
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public SerializationComponent()
-          : base("Serialization", "toJson",
-              "create json from grasshopper geometries",
+        public DeserializationComponent()
+          : base("Deserialization", "readJson",
+              "create grasshopper geometries from json",
               "GrasshopperProgram", "Serialization")
         {
         }
@@ -36,7 +31,7 @@ namespace Serialization
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGeometryParameter("geometry", "input", "Add geometries to json helper", GH_ParamAccess.tree);
+            pManager.AddTextParameter("jsonContent", "json", "input json contents", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -44,7 +39,7 @@ namespace Serialization
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("json", "info", "Serialization info", GH_ParamAccess.item);
+            pManager.AddGeometryParameter("geometriesFromJson", "geometries", "get geometries from json contents", GH_ParamAccess.tree);
             pManager.AddTextParameter("print", "out", "console info", GH_ParamAccess.item);
         }
 
@@ -70,12 +65,11 @@ namespace Serialization
             }
         }
 
-        private static void Action(IGH_DataAccess DA)
+        public void Action(IGH_DataAccess DA)
         {
-            DA.GetDataTree(0, out GH_Structure<IGH_GeometricGoo> tree);
-            String json = ToJson.ToJsonInfo(tree);
-            DA.SetData(0, json);
-            Console.WriteLine(tree[0].GetType());
+            String json = "";
+            DA.GetData(0, ref json);
+            DA.SetDataTree(0, ReadJson.Get(json));
         }
 
         /// <summary>
@@ -99,7 +93,7 @@ namespace Serialization
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("1456602e-a2b0-4503-95f4-54a2ce576401"); }
+            get { return new Guid("b081585e-3eb4-4603-aaca-b9b43eed18ae"); }
         }
     }
 }

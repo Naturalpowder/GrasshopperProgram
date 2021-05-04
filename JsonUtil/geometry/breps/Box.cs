@@ -13,6 +13,11 @@ namespace geometry.breps
         public Point z { get; set; }
         public Point origin { get; set; }
 
+        public Box()
+        {
+
+        }
+
         public Box(Rhino.Geometry.Box box)
         {
             x = new Point(box.X.Max - box.X.Min, 0, 0);

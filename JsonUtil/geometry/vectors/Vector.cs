@@ -10,7 +10,12 @@ namespace geometry.vectors
         public Point origin { set; get; }
         public Point vector { set; get; }
 
-        public Vector(Point3d vector)
+        public Vector()
+        {
+
+        }
+
+        public Vector(Rhino.Geometry.Point3d vector)
         {
             origin = new Point(0, 0, 0);
             this.vector = new Point(vector.X, vector.Y, vector.Z);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonUtil;
 using SocketUtil;
+using System.IO;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -64,20 +65,25 @@ namespace Template
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            bool toggle = false;
-            DA.GetData(0, ref toggle);
-            DA.GetData(4, ref maxRefresh);
-            if (toggle && iter < maxRefresh)
+            using (StringWriter stringWriter = new StringWriter())
             {
-                iter++;
-                Draw(DA);
-                ExpireSolution(true);
-            }
-            else if (!toggle)
-            {
-                iter = 0;
-                stop = false;
-                Setup(DA);
+                Console.SetOut(stringWriter);
+                bool toggle = false;
+                DA.GetData(0, ref toggle);
+                DA.GetData(4, ref maxRefresh);
+                if (toggle && iter < maxRefresh)
+                {
+                    iter++;
+                    Draw(DA);
+                    ExpireSolution(true);
+                }
+                else if (!toggle)
+                {
+                    iter = 0;
+                    stop = false;
+                    Setup(DA);
+                }
+                DA.SetData(0, stringWriter.ToString());
             }
         }
 
@@ -155,8 +161,8 @@ namespace Template
             else
             {
                 tree = ReadJson.Get(json);
-                DA.SetDataTree(1, tree);
             }
+            DA.SetDataTree(1, tree);
         }
 
         private void GetServer(IGH_DataAccess DA, ref Server server)

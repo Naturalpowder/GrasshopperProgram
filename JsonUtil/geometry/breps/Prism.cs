@@ -12,7 +12,12 @@ namespace geometry.breps
         public List<Point> baseSurface { set; get; }
         public Point height { set; get; }
 
-        public Prism(Extrusion extrusion)
+        public Prism()
+        {
+
+        }
+
+        public Prism(Rhino.Geometry.Extrusion extrusion)
         {
             initial();
         }

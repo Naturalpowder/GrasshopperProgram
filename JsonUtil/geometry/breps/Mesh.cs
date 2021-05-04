@@ -11,6 +11,11 @@ namespace geometry.breps
         public List<Point> points { set; get; }
         public List<int[]> faces { set; get; }
 
+        public Mesh()
+        {
+
+        }
+
         public Mesh(Rhino.Geometry.Mesh mesh)
         {
             points = new List<Point>(mesh.Vertices.ToList().Select(e => new Point(e.X, e.Y, e.Z)));

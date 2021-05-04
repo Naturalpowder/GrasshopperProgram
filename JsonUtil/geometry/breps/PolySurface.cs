@@ -12,7 +12,12 @@ namespace geometry.breps
         public List<Point> points;
         public List<int[]> faces;
 
-        public PolySurface(Brep brep)
+        public PolySurface()
+        {
+
+        }
+
+        public PolySurface(Rhino.Geometry.Brep brep)
         {
             points = ToPoints(brep);
             faces = new List<int[]>();

@@ -7,6 +7,11 @@ namespace geometry.vectors
         public Point origin { set; get; }
         public double radius { set; get; }
 
+        public Circle()
+        {
+
+        }
+
         public Circle(Rhino.Geometry.Circle circle)
         {
             this.radius = circle.Radius;

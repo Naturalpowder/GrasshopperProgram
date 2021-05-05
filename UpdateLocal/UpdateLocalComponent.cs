@@ -34,7 +34,7 @@ namespace UpdateLocal
         public UpdateLocalComponent()
           : base("UpdateLocal", "Update",
               "get local json geometry calculated results",
-              "GrasshopperProgram", "ExpireTools")
+              "GrasshopperProgram", "Serialization")
         {
         }
 
@@ -71,12 +71,14 @@ namespace UpdateLocal
                 if (expiredGlobal && expire)
                 {
                     ExpireSolution(true);
+                    TextWriter writer = Console.Out;
                     using (StringWriter stringWriter = new StringWriter())
                     {
                         Console.SetOut(stringWriter);
                         Draw(DA);
                         DA.SetData(0, stringWriter.ToString());
                     }
+                    Console.SetOut(writer);
                 }
                 else
                 {

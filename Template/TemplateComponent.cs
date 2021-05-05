@@ -33,7 +33,7 @@ namespace Template
         public TemplateComponent()
           : base("SocketSolver", "Solver",
               "A Socket Template for running C# scripts with JAVA",
-              "GrasshopperProgram", "Socket")
+              "GrasshopperProgram", "Serialization")
         {
         }
 
@@ -65,6 +65,7 @@ namespace Template
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            TextWriter writer = Console.Out;
             using (StringWriter stringWriter = new StringWriter())
             {
                 Console.SetOut(stringWriter);
@@ -85,6 +86,7 @@ namespace Template
                 }
                 DA.SetData(0, stringWriter.ToString());
             }
+            Console.SetOut(writer);
         }
 
         private void Setup(IGH_DataAccess DA)

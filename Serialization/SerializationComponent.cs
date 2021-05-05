@@ -57,12 +57,14 @@ namespace Serialization
         {
             try
             {
+                TextWriter writer = Console.Out;
                 using (StringWriter stringWriter = new StringWriter())
                 {
                     Console.SetOut(stringWriter);
                     Action(DA);
                     DA.SetData(1, stringWriter.ToString());
                 }
+                Console.SetOut(writer);
             }
             catch (Exception e)
             {

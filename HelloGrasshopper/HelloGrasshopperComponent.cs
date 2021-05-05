@@ -108,7 +108,7 @@ namespace HelloGrasshopper
         private List<Object> ReadJson(String filePath)
         {
             ReadJson readJson = new ReadJson(filePath);
-            return readJson.Get();
+            return readJson.Get().ToList<object>();
         }
 
         private void UpdateInfo(IGH_DataAccess DA, GH_Document doc, IGH_DocumentObject e)
@@ -137,7 +137,7 @@ namespace HelloGrasshopper
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null；
+                return null;
             }
         }
 

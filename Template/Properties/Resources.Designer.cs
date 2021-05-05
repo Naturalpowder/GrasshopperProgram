@@ -63,9 +63,9 @@ namespace Template.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Info {
+        internal static System.Drawing.Bitmap ProgramIcon {
             get {
-                object obj = ResourceManager.GetObject("Info", resourceCulture);
+                object obj = ResourceManager.GetObject("ProgramIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace Template.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ProgramIcon {
+        internal static System.Drawing.Bitmap Socket {
             get {
-                object obj = ResourceManager.GetObject("ProgramIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("Socket", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

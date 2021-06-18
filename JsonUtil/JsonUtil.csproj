@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="geometry\breps\Box.cs" />
     <Compile Include="geometry\breps\PolySurface.cs" />
+    <Compile Include="geometry\hole\IndexFace.cs" />
+    <Compile Include="geometry\hole\SurfaceWithHole.cs" />
     <Compile Include="geometry\vectors\Circle.cs" />
     <Compile Include="geometry\Geo.cs" />
     <Compile Include="geometry\Info.cs" />

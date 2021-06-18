@@ -17,36 +17,37 @@ namespace JsonUtil
                 Group group = new Group();
                 foreach (IGH_GeometricGoo goo in goos)
                 {
-                    if (goo is GH_Box box1)
+                    Geo geo;
+                    if (goo is GH_Box box)
                     {
-                        geometry.breps.Box box = new geometry.breps.Box(box1.Value);
-                        group.geos.Add(box);
+                        geo = new geometry.breps.Box(box.Value);
                     }
-                    else if (goo is GH_Mesh mesh1)
+                    else if (goo is GH_Mesh mesh)
                     {
-                        geometry.breps.Mesh mesh = new geometry.breps.Mesh(mesh1.Value);
-                        group.geos.Add(mesh);
+                        geo = new geometry.breps.Mesh(mesh.Value);
                     }
-                    else if (goo is GH_Circle circle1)
+                    else if (goo is GH_Circle circle)
                     {
-                        geometry.vectors.Circle circle = new geometry.vectors.Circle(circle1.Value);
-                        group.geos.Add(circle);
+                        geo = new geometry.vectors.Circle(circle.Value);
                     }
                     else if (goo is GH_Point point)
                     {
-                        geometry.vectors.Vector vector = new geometry.vectors.Vector(point.Value);
-                        group.geos.Add(vector);
+                        geo = new geometry.vectors.Vector(point.Value);
                     }
-                    else if (goo is GH_Surface surface1)
+                    else if (goo is GH_Surface surface)
                     {
-                        geometry.breps.Surface surface = new geometry.breps.Surface(surface1.Value);
-                        group.geos.Add(surface);
+                        if (surface.Value.Loops.Count == 1)
+                            geo = new geometry.breps.Surface(surface.Value);
+                        else
+                            geo = new geometry.hole.SurfaceWithHole(surface.Value);
                     }
                     else if (goo is GH_Brep brep)
                     {
-                        geometry.breps.PolySurface polySurface = new geometry.breps.PolySurface(brep.Value);
-                        group.geos.Add(polySurface);
+                        geo = new geometry.breps.PolySurface(brep.Value);
                     }
+                    else
+                        geo = new geometry.breps.Box();
+                    group.geos.Add(geo);
                 }
                 gHHelper.groups.Add(group);
             }

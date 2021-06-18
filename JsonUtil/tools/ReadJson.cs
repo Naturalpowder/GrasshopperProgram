@@ -32,7 +32,6 @@ namespace JsonUtil
                 {
                     if (geo is geometry.breps.Box myBox)
                     {
-
                         Rhino.Geometry.Box box = myBox.ToRhinoBox();
                         structure.Append(new GH_Box(box), path);
                     }
@@ -60,6 +59,11 @@ namespace JsonUtil
                     {
                         Rhino.Geometry.Mesh mesh = myMesh.ToRhinoMesh();
                         structure.Append(new GH_Mesh(mesh), path);
+                    }
+                    else if (geo is geometry.hole.SurfaceWithHole surfaceWithHole)
+                    {
+                        Brep surface = surfaceWithHole.ToRhinoSurface();
+                        structure.Append(new GH_Surface(surface), path);
                     }
                 }
             }

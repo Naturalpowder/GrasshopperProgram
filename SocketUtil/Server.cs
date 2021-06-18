@@ -60,11 +60,11 @@ namespace SocketUtil
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);//创建一个socket对像，如果用udp协议，则要用SocketType.Dgram类型的套接字
             server.Bind(ipe);//绑定EndPoint对像（2000端口和ip地址）
             server.Listen(0);//开始监听
-            server.ReceiveTimeout = 10000;
-            server.SendTimeout = 10000;
+            server.ReceiveTimeout = 1000000;
+            server.SendTimeout = 1000000;
             temp = server.Accept();//为新建连接创建新的socket
-            temp.ReceiveTimeout = 10000;
-            server.SendTimeout = 10000;
+            temp.ReceiveTimeout = 1000000;
+            server.SendTimeout = 1000000;
             Console.WriteLine("建立连接");
         }
 

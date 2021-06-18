@@ -25,6 +25,9 @@ namespace geometry.breps
         public Extrusion ToRhinoPrism()
         {
             PolylineCurve curve = Util.ToRhinoPolylineCurve(baseSurface);
+            _ = curve.TryGetPlane(out Plane plane);
+            if (plane.ZAxis.Z < 0)
+                curve.Reverse();
             return Extrusion.Create(curve, height.z, true);
         }
     }

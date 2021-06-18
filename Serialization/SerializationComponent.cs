@@ -77,7 +77,7 @@ namespace Serialization
             DA.GetDataTree(0, out GH_Structure<IGH_GeometricGoo> tree);
             String json = ToJson.ToJsonInfo(tree);
             DA.SetData(0, json);
-            Console.WriteLine(tree[0].GetType());
+            //Console.WriteLine(tree[0].GetType());
         }
 
         /// <summary>

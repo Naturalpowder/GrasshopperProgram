@@ -46,8 +46,6 @@ namespace geometry.hole
             faces.Add(face.outFace);
             List<PolylineCurve> curves = new List<PolylineCurve>(faces.Select(e => Util.ToRhinoPolylineCurve(pts, e)));
             Brep outBrep = Brep.CreatePlanarBreps(curves[curves.Count - 1], .1)[0];
-            if (curves.Count == 2)
-                Console.WriteLine(curves.Count);
             if (curves.Count > 1)
             {
                 outBrep.Faces[0].TryGetPlane(out Plane plane, .01);
@@ -57,10 +55,8 @@ namespace geometry.hole
                 {
                     outBrep = Brep.CreatePlanarDifference(outBrep, e, plane, .1)[0];
                 }
-                return outBrep;
             }
-            else
-                return outBrep;
+            return outBrep;
         }
     }
 }

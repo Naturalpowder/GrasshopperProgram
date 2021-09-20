@@ -20,9 +20,12 @@ namespace UpdateLocal
 {
     public class UpdateLocalComponent : GH_Component
     {
-        private bool expiredGlobal = true;
-        private int count = 0;
-        private GH_Structure<IGH_Goo> data;
+        private static readonly string NOMESSAGE = "No Message!";
+
+        private bool ExpiredGlobal = true;
+        private int Count = 0;
+        private GH_Structure<IGH_Goo> Data;
+        private readonly List<string> FinalOutput = new List<string>();
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -68,7 +71,7 @@ namespace UpdateLocal
             {
                 bool expire = false;
                 DA.GetData(2, ref expire);
-                if (expiredGlobal && expire)
+                if (ExpiredGlobal && expire)
                 {
                     ExpireSolution(true);
                     TextWriter writer = Console.Out;
@@ -82,7 +85,7 @@ namespace UpdateLocal
                 }
                 else
                 {
-                    expiredGlobal = true;
+                    ExpiredGlobal = true;
                     Setup(DA);
                     DA.SetData(0, "Now the program is in the end!");
                 }
@@ -104,35 +107,49 @@ namespace UpdateLocal
 
         private void Setup(IGH_DataAccess DA)
         {
+            InitialOutput(DA);
             String filePath = "";
             DA.GetData(0, ref filePath);
-            data = new ReadJson(filePath).Get();
+            Data = new ReadJson(filePath).Get();
+        }
+
+        private void InitialOutput(IGH_DataAccess DA)
+        {
+            String outputPath = "";
+            DA.GetData(1, ref outputPath);
+            if (FinalOutput.Count != 0)
+            {
+                String content = String.Join("\n", FinalOutput);
+                SaveTxt(content, outputPath);
+            }
+            FinalOutput.Clear();
         }
 
         private void Draw(IGH_DataAccess DA)
         {
-            String outputPath = "";
-            DA.GetData(1, ref outputPath);
             GH_Document doc = OnPingDocument();
-            if (count == data.Branches.Count)
-                Calculate(doc, new List<IGH_Goo>(data.Branches[0]));
+            //由于ExpireSolution方法进行的更新滞后一次，所以最后需要多进行一次计算，以获取所有信息。因而，第一次获取的信息应为NOMESSAGE，需要过滤。
+            if (Count == Data.Branches.Count)
+                Calculate(doc, new List<IGH_Goo>(Data.Branches[0]));
             else
-                Calculate(doc, new List<IGH_Goo>(data.Branches[count]));
-            //存储result不等于"No Message!"时的结果
+                Calculate(doc, new List<IGH_Goo>(Data.Branches[Count]));
+            //存储result不等于NOMESSAGE时的结果
             String result = GetTextResult(doc);
             Console.WriteLine(result);
-            ManageCirculation(data);
+            ManageCirculation();
+            if (!result.Equals(NOMESSAGE))
+                FinalOutput.Add(result);
         }
 
-        private void ManageCirculation(GH_Structure<IGH_Goo> structure)
+        private void ManageCirculation()
         {
-            if (count == structure.Branches.Count)
+            if (Count == Data.Branches.Count)
             {
-                expiredGlobal = false;
-                count = 0;
+                ExpiredGlobal = false;
+                Count = 0;
             }
             else
-                count++;
+                Count++;
         }
 
         private void Calculate(GH_Document doc, List<IGH_Goo> list)
@@ -148,7 +165,7 @@ namespace UpdateLocal
             GH_Panel panel = (GH_Panel)GetObject(doc, "Result");
             panel.CollectData();
             IGH_StructureEnumerator enumerator = panel.VolatileData.AllData(true);
-            String info = "No Message!";
+            String info = NOMESSAGE;
             if (new List<IGH_Goo>(enumerator).Count > 0)
             {
                 info = String.Join("\n", new List<IGH_Goo>(enumerator).Select(e => e.ToString()));
@@ -178,6 +195,14 @@ namespace UpdateLocal
         public override Guid ComponentGuid
         {
             get { return new Guid("ad3d492b-58d2-49a0-871b-1a9ef6da2434"); }
+        }
+
+        private void SaveTxt(String content, String filePath)
+        {
+            StreamWriter writer = File.CreateText(filePath);
+            writer.Write(content);
+            writer.Flush();
+            writer.Close();
         }
 
         public IGH_DocumentObject GetObject(GH_Document doc, String key)

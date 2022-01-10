@@ -128,7 +128,7 @@ namespace UpdateLocal
         private void Draw(IGH_DataAccess DA)
         {
             GH_Document doc = OnPingDocument();
-            //由于ExpireSolution方法进行的更新滞后一次，所以最后需要多进行一次计算，以获取所有信息。因而，第一次获取的信息应为NOMESSAGE，需要过滤。
+            //由于ExpireSolution方法进行的更新第一次不计算，所以最后需要多进行一次Count=0的计算，并插入第一次计算位置，以获取所有信息，而第一次获取的信息应为NOMESSAGE，需要过滤。
             if (Count == Data.Branches.Count)
                 Calculate(doc, new List<IGH_Goo>(Data.Branches[0]));
             else
@@ -138,7 +138,8 @@ namespace UpdateLocal
             Console.WriteLine(result);
             ManageCirculation();
             if (!result.Equals(NOMESSAGE))
-                FinalOutput.Add(result);
+                if (Count == 0) FinalOutput.Insert(0, result);
+                else FinalOutput.Add(result);
         }
 
         private void ManageCirculation()

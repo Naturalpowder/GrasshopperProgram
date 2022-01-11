@@ -137,7 +137,7 @@ namespace UpdateLocal
             String result = GetTextResult(doc);
             Console.WriteLine(result);
             ManageCirculation();
-            if (!result.Equals(NOMESSAGE))
+            if (Count != 1)
                 if (Count == 0) FinalOutput.Insert(0, result);
                 else FinalOutput.Add(result);
         }

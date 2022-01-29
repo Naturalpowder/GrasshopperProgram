@@ -24,10 +24,17 @@ namespace geometry.breps
             faces = new List<int[]>();
             foreach (BrepFace face in brep.Faces)
             {
-                List<Point> temp = Util.ToPoints(face.ToBrep());
-                faces.Add(Util.GetFaceIndex(points, temp));
+                int[] index = Util.GetFaceIndex(points, face);
+                faces.Add(index);
             }
             initial();
+        }
+
+        public Brep ToRhinoPolySurface()
+        {
+            List<Brep> surfaces = new List<Brep>(faces.Select(e => Util.GetSurfaces(points, e).ToRhinoSurface()));
+            if (surfaces.Count == 1) return surfaces[0];
+            return Brep.CreateSolid(surfaces, .01)[0];
         }
     }
 }

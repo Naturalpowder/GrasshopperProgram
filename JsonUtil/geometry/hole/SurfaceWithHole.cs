@@ -27,9 +27,7 @@ namespace geometry.hole
             foreach (BrepLoop loop in loops)
             {
                 Curve curve = loop.To3dCurve();
-                Polyline pl = new Polyline();
-                curve.TryGetPolyline(out pl);
-                List<Point> temp = new List<Point>(pl.Select(e => new Point(e.X, e.Y, e.Z)));
+                List<Point> temp = Util.ToPoints(curve);
                 int[] index = Util.GetFaceIndex(points, temp);
                 innerFaces.Add(index.Skip(0).Take(index.Length - 1).ToArray());
             }

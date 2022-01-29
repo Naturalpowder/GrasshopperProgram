@@ -33,7 +33,7 @@ namespace geometry
 
         public bool IsEqual(double a, double b)
         {
-            return Math.Abs(a - b) < .001;
+            return Math.Abs(a - b) < .01;
         }
 
         public override int GetHashCode()

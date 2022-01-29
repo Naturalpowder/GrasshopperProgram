@@ -55,6 +55,11 @@ namespace JsonUtil
                         Extrusion extrusion = prism.ToRhinoPrism();
                         structure.Append(new GH_Brep(extrusion.ToBrep()), path);
                     }
+                    else if (geo is geometry.breps.PolySurface polySurface)
+                    {
+                        Brep solid = polySurface.ToRhinoPolySurface();
+                        structure.Append(new GH_Brep(solid), path);
+                    }
                     else if (geo is geometry.breps.Mesh myMesh)
                     {
                         Rhino.Geometry.Mesh mesh = myMesh.ToRhinoMesh();

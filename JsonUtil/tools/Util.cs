@@ -41,9 +41,29 @@ namespace JsonUtil
             return faceIndex.ToArray();
         }
 
+        public static geometry.breps.Surface GetSurfaces(List<geometry.Point> points, int[] face)
+        {
+            return new geometry.breps.Surface(new List<geometry.Point>(face.Select(e => points[e])));
+        }
+
         public static List<geometry.Point> ToPoints(Brep brep)
         {
             return new List<geometry.Point>(brep.Vertices.Select(e => new geometry.Point(e.Location.X, e.Location.Y, e.Location.Z)));
+        }
+
+        public static List<geometry.Point> ToPoints(Curve curve)
+        {
+            Polyline pl = new Polyline();
+            curve.TryGetPolyline(out pl);
+            List<geometry.Point> points = new List<geometry.Point>(pl.Select(e => new geometry.Point(e.X, e.Y, e.Z)));
+            return points;
+        }
+
+        public static int[] GetFaceIndex(List<geometry.Point> points, BrepFace face)
+        {
+            Curve curve = face.OuterLoop.To3dCurve();
+            int[] index = Util.GetFaceIndex(points, ToPoints(curve));
+            return index;
         }
     }
 }

@@ -16,9 +16,15 @@ namespace geometry.breps
 
         }
 
+        public Surface(IList<Point> points)
+        {
+            this.baseSurface = new List<Point>(points);
+        }
+
         public Surface(Rhino.Geometry.Brep surface)
         {
-            baseSurface = new List<Point>(surface.Vertices.ToList().Select(e => new Point(e.Location.X, e.Location.Y, e.Location.Z)));
+            Curve curve = surface.Faces[0].OuterLoop.To3dCurve();
+            baseSurface = Util.ToPoints(curve);
             initial();
         }
 

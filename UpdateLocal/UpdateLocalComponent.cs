@@ -57,7 +57,8 @@ namespace UpdateLocal
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("print", "out", "console info", GH_ParamAccess.item);
+            pManager.AddTextParameter("Console Print", "out", "console info", GH_ParamAccess.item);
+            pManager.AddTextParameter("Geometry Index", "index", "the index of selected geometry", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -80,6 +81,7 @@ namespace UpdateLocal
                         Console.SetOut(stringWriter);
                         Draw(DA);
                         DA.SetData(0, stringWriter.ToString());
+                        DA.SetData(1, Math.Max(Count - 1, 0));
                     }
                     Console.SetOut(writer);
                 }

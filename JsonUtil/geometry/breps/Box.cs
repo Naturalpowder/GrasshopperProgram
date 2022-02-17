@@ -23,7 +23,8 @@ namespace geometry.breps
             x = new Point(box.X.Max - box.X.Min, 0, 0);
             y = new Point(0, box.Y.Max - box.Y.Min, 0);
             z = new Point(0, 0, box.Z.Max - box.Z.Min);
-            origin = new Point(box.X.Min, box.Y.Min, box.Z.Min);
+            Point3d originR = box.Plane.Origin;
+            origin = new Point(originR.X, originR.Y, originR.Z);
             initial();
         }
 

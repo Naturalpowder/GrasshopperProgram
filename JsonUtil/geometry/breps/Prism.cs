@@ -9,7 +9,7 @@ namespace geometry.breps
 {
     public class Prism : Geo
     {
-        public List<Point> baseSurface { set; get; }
+        public Surface baseSurface { set; get; }
         public Point height { set; get; }
 
         public Prism()
@@ -22,13 +22,13 @@ namespace geometry.breps
             initial();
         }
 
-        public Extrusion ToRhinoPrism()
+        public Brep ToRhinoPrism()
         {
-            PolylineCurve curve = Util.ToRhinoPolylineCurve(baseSurface);
-            _ = curve.TryGetPlane(out Plane plane);
-            if (plane.ZAxis.Z < 0)
-                curve.Reverse();
-            return Extrusion.Create(curve, height.z, true);
+            BrepFace face = baseSurface.ToRhinoSurface().Faces[0];
+            Point3d start = baseSurface.points[0].ToRhinoPoint();
+            Point3d end = Point3d.Add(start, height.ToRhinoPoint());
+            PolylineCurve line = new PolylineCurve(new List<Point3d>() { start, end });
+            return face.CreateExtrusion(line, true);
         }
     }
 }

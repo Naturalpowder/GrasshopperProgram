@@ -4,6 +4,7 @@ using System.Text;
 using Rhino.Geometry;
 using System.Linq;
 using geometry;
+using geometry.face;
 
 namespace JsonUtil
 {
@@ -28,22 +29,24 @@ namespace JsonUtil
             return new PolylineCurve(list);
         }
 
-
-        public static int[] GetFaceIndex(List<geometry.Point> points, List<geometry.Point> temp)
+        public static Brep ToRhinoSurface(List<geometry.Point> points, IndexFace face)
         {
-            List<int> faceIndex = new List<int>();
-            for (int i = 0; i < temp.Count; i++)
+            List<Point3d> pts = points.Select(e => e.ToRhinoPoint()).ToList();
+            List<int[]> faces = face.innerFaces;
+            faces.Add(face.outFace);
+            List<PolylineCurve> curves = new List<PolylineCurve>(faces.Select(e => Util.ToRhinoPolylineCurve(pts, e)));
+            Brep outBrep = Brep.CreatePlanarBreps(curves[curves.Count - 1], .1)[0];
+            if (curves.Count > 1)
             {
-                int index = points.IndexOf(temp[i]);
-                if (index != -1)
-                    faceIndex.Add(index);
+                outBrep.Faces[0].TryGetPlane(out Plane plane, .1);
+                curves.Remove(curves[curves.Count - 1]);
+                Brep[] inBreps = Brep.CreatePlanarBreps(curves, .1);
+                foreach (Brep e in inBreps)
+                {
+                    outBrep = Brep.CreatePlanarDifference(outBrep, e, plane, .0001)[0];
+                }
             }
-            return faceIndex.ToArray();
-        }
-
-        public static geometry.breps.Surface GetSurfaces(List<geometry.Point> points, int[] face)
-        {
-            return new geometry.breps.Surface(new List<geometry.Point>(face.Select(e => points[e])));
+            return outBrep;
         }
 
         public static List<geometry.Point> ToPoints(Brep brep)
@@ -59,11 +62,37 @@ namespace JsonUtil
             return points;
         }
 
-        public static int[] GetFaceIndex(List<geometry.Point> points, BrepFace face)
+        public static IndexFace GetFaceIndex(List<BrepLoop> loops, List<geometry.Point> points)
         {
-            Curve curve = face.OuterLoop.To3dCurve();
-            int[] index = Util.GetFaceIndex(points, ToPoints(curve));
-            return index;
+            List<int[]> innerFaces = new List<int[]>();
+            foreach (BrepLoop loop in loops)
+            {
+                Curve curve = loop.To3dCurve();
+                List<geometry.Point> temp = ToPoints(curve);
+                int[] index = GetFaceIndex(points, temp);
+                innerFaces.Add(index.Skip(0).Take(index.Length - 1).ToArray());
+            }
+            int[] outFace = innerFaces[0];
+            innerFaces.Remove(outFace);
+            return new IndexFace(innerFaces, outFace);
+        }
+
+        public static IndexFace GetFaceIndex(List<geometry.Point> points, BrepFace face)
+        {
+            List<BrepLoop> loops = face.Loops.ToList();
+            return GetFaceIndex(loops, points);
+        }
+
+        public static int[] GetFaceIndex(List<geometry.Point> points, List<geometry.Point> temp)
+        {
+            List<int> faceIndex = new List<int>();
+            for (int i = 0; i < temp.Count; i++)
+            {
+                int index = points.IndexOf(temp[i]);
+                if (index != -1)
+                    faceIndex.Add(index);
+            }
+            return faceIndex.ToArray();
         }
     }
 }

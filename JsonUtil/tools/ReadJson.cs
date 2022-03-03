@@ -52,8 +52,8 @@ namespace JsonUtil
                     }
                     else if (geo is Prism prism)
                     {
-                        Extrusion extrusion = prism.ToRhinoPrism();
-                        structure.Append(new GH_Brep(extrusion.ToBrep()), path);
+                        Brep extrusion = prism.ToRhinoPrism();
+                        structure.Append(new GH_Brep(extrusion), path);
                     }
                     else if (geo is geometry.breps.PolySurface polySurface)
                     {
@@ -64,11 +64,6 @@ namespace JsonUtil
                     {
                         Rhino.Geometry.Mesh mesh = myMesh.ToRhinoMesh();
                         structure.Append(new GH_Mesh(mesh), path);
-                    }
-                    else if (geo is geometry.hole.SurfaceWithHole surfaceWithHole)
-                    {
-                        Brep surface = surfaceWithHole.ToRhinoSurface();
-                        structure.Append(new GH_Surface(surface), path);
                     }
                 }
             }

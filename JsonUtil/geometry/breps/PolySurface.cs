@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino.Geometry;
 using JsonUtil;
+using geometry.face;
 
 namespace geometry.breps
 {
     public class PolySurface : Geo
     {
         public List<Point> points;
-        public List<int[]> faces;
+        public List<IndexFace> faces;
 
         public PolySurface()
         {
@@ -21,10 +22,10 @@ namespace geometry.breps
         public PolySurface(Brep brep)
         {
             points = Util.ToPoints(brep);
-            faces = new List<int[]>();
+            faces = new List<IndexFace>();
             foreach (BrepFace face in brep.Faces)
             {
-                int[] index = Util.GetFaceIndex(points, face);
+                IndexFace index = Util.GetFaceIndex(points, face);
                 faces.Add(index);
             }
             initial();
@@ -32,9 +33,9 @@ namespace geometry.breps
 
         public Brep ToRhinoPolySurface()
         {
-            List<Brep> surfaces = new List<Brep>(faces.Select(e => Util.GetSurfaces(points, e).ToRhinoSurface()));
+            List<Brep> surfaces = new List<Brep>(faces.Select(e => Util.ToRhinoSurface(points, e)));
             if (surfaces.Count == 1) return surfaces[0];
-            return Brep.CreateSolid(surfaces, .01)[0];
+            return Brep.CreateSolid(surfaces, .001)[0];
         }
     }
 }

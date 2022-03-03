@@ -4,34 +4,34 @@ using System.Text;
 using Rhino.Geometry;
 using System.Linq;
 using JsonUtil;
+using geometry.face;
 
 namespace geometry.breps
 {
     public class Surface : Geo
     {
-        public List<Point> baseSurface { set; get; }
+        public List<Point> points { set; get; }
+        public List<IndexFace> faces { set; get; }
 
         public Surface()
         {
 
         }
 
-        public Surface(IList<Point> points)
-        {
-            this.baseSurface = new List<Point>(points);
-        }
-
         public Surface(Rhino.Geometry.Brep surface)
         {
-            Curve curve = surface.Faces[0].OuterLoop.To3dCurve();
-            baseSurface = Util.ToPoints(curve);
+            points = Util.ToPoints(surface);
+            List<BrepLoop> loops = new List<BrepLoop>(surface.Loops);
+            faces = new List<IndexFace>
+            {
+                Util.GetFaceIndex(loops, points)
+            };
             initial();
         }
 
         public Brep ToRhinoSurface()
         {
-            PolylineCurve curve = Util.ToRhinoPolylineCurve(baseSurface);
-            return Brep.CreatePlanarBreps(curve, .1)[0];
+            return Util.ToRhinoSurface(points, faces[0]);
         }
     }
 }

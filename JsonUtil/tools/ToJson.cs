@@ -36,10 +36,7 @@ namespace JsonUtil
                     }
                     else if (goo is GH_Surface surface)
                     {
-                        if (surface.Value.Loops.Count == 1)
-                            geo = new geometry.breps.Surface(surface.Value);
-                        else
-                            geo = new geometry.hole.SurfaceWithHole(surface.Value);
+                        geo = new geometry.breps.Surface(surface.Value);
                     }
                     else if (goo is GH_Brep brep)
                     {

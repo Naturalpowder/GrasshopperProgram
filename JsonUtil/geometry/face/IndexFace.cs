@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace geometry.hole
+namespace geometry.face
 {
-    class IndexFace
+    public class IndexFace
     {
         public List<int[]> innerFaces { set; get; }
         public int[] outFace { set; get; }

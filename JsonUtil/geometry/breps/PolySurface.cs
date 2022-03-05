@@ -35,7 +35,9 @@ namespace geometry.breps
         {
             List<Brep> surfaces = new List<Brep>(faces.Select(e => Util.ToRhinoSurface(points, e)));
             if (surfaces.Count == 1) return surfaces[0];
-            return Brep.CreateSolid(surfaces, .001)[0];
+            Brep[] breps = Brep.CreateSolid(surfaces, .001);
+            if (breps.Length == 0) return new Brep();
+            return breps[0];
         }
     }
 }
